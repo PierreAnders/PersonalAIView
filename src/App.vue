@@ -1,7 +1,12 @@
 <template>
   <div>
-    <input v-model="query" @keyup.enter="sendQuery">
-    <p>{{ response }}</p>
+    <div id="chat-window">
+      <div v-for="(message, index) in messages" :key="index">
+        <p :class="message.source">{{ message.text }}</p>
+      </div>
+    </div>
+    <input type="text" v-model="newMessage" @keyup.enter="sendMessage">
+    <button @click="sendMessage">Envoyer</button>
   </div>
 </template>
 
@@ -11,17 +16,40 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      query: '',
-      response: '',
-    };
+      newMessage: '',
+      messages: [],
+      session_id: 'session1',
+    }
   },
   methods: {
-    async sendQuery() {
-      const res = await axios.post('http://localhost:5000/chat', {
-        query: this.query,
+    async sendMessage() {
+      this.messages.push({ source: 'user', text: this.newMessage });
+
+      const response = await axios.post('http://localhost:5000/chat', {
+        session_id: this.session_id,
+        query: this.newMessage
       });
-      this.response = res.data;
-    },
-  },
-};
+
+      this.messages.push({ source: 'bot', text: response.data.answer });
+      this.newMessage = '';
+    }
+  }
+}
 </script>
+
+<style scoped>
+#chat-window {
+  height: 500px;
+  overflow-y: auto;
+}
+
+.user {
+  text-align: right;
+  color: rgb(0, 0, 0);
+}
+
+.bot {
+  text-align: left;
+  color: green;
+}
+</style>
