@@ -16,7 +16,7 @@
         :class="{ 'dark-mode': darkMode }"></textarea>
       <div class="div-button">
         <button @click="sendMessage" class="button">
-          <svg v-if="!isLoading" class="button-svg" width="30" height="30" viewBox="0 0 40 40" fill="none"
+          <svg v-if="!isLoading" class="button-svg" :class="{ 'dark-mode-svg': darkMode }" width="30" height="30" viewBox="0 0 40 40" fill="none"
             xmlns="http://www.w3.org/2000/svg">
             <circle cx="20" cy="20" r="20" fill="none" />
             <path
@@ -27,6 +27,9 @@
         </button>
       </div>
     </div>
+    <button @click="toggleDarkMode" class="mode-button">
+      {{ darkMode ? 'Light' : 'Dark' }}
+    </button>
   </div>
 </template>
 
@@ -48,7 +51,6 @@ export default {
     async sendMessage() {
       this.isLoading = true;
 
-      // Créer le timestamp
       const timestamp = moment().format('HH:mm:ss');
 
       this.messages.push({ source: 'user', text: this.newMessage, timestamp: timestamp });
@@ -63,13 +65,88 @@ export default {
       this.isLoading = false;
     },
     toggleDarkMode() {
-      this.darkMode = !this.darkMode;
+    this.darkMode = !this.darkMode;
+    if (this.darkMode) {
+      document.documentElement.classList.add('dark-mode');
+    } else {
+      document.documentElement.classList.remove('dark-mode');
     }
+  }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+$dark-color: #414141;
+$light-color: #ececec;
+$black-color: #000000;
+$grey-color: #393939;
+$font-family: 'Roboto Mono', monospace;
+$timestamp-font-family: 'Poppins', sans-serif;
+$border-radius: 5px;
+$button-border-radius: 8px;
+$padding: 0.5rem;
+$font-size: small;
+
+html, body {
+  transition: background-color .5s;
+}
+
+body.dark-mode {
+  background-color: $dark-color;
+}
+
+.dark-mode {
+  background-color: $dark-color;
+  color: $light-color;
+}
+
+.dark-mode-message.user {
+  background-color: $light-color;
+  color: $dark-color;
+}
+
+.dark-mode-message.bot {
+  background-color: $dark-color;
+  color: $light-color;
+}
+
+.dark-mode .spinner {
+  border-top: 2px solid $light-color;
+}
+
+.dark-mode #new-message textarea {
+  background-color: #ecececaa;
+  color: $dark-color;
+  border-color: $light-color;
+}
+
+.dark-mode .button {
+  background-color: #ecececaa;
+  border-color: $light-color;
+  color: $dark-color;
+}
+
+.dark-mode .mode-button {
+  background-color: $light-color;
+  color: $dark-color;
+}
+
+.dark-mode-svg {
+  fill: $dark-color;
+}
+
+$dark-color: #414141;
+$light-color: #ececec;
+$black-color: #000000;
+$grey-color: #7e7e7e;
+$font-family: 'Roboto Mono', monospace;
+$timestamp-font-family: 'Poppins', sans-serif;
+$border-radius: 5px;
+$button-border-radius: 8px;
+$padding: 0.5rem;
+$font-size: small;
 
 .message-padding {
   height: 100px;
@@ -81,37 +158,36 @@ export default {
   justify-content: center;
 }
 
-
 .message-box {
   display: flex;
   flex-direction: column;
 }
 
 .spinner {
-  border: 4px solid #f3f3f3;
+  border: 2px solid #f3f3f3;
   border-radius: 100%;
-  border-top: 4px solid #000000;
+  border-top: 2px solid $black-color;
   width: 20px;
   height: 20px;
-  animation: spin 0.5s linear infinite;
+  animation: spin 0.7s linear infinite;
   margin-right: 4px;
-}
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
 
-  100% {
-    transform: rotate(360deg);
+    100% {
+      transform: rotate(360deg);
+    }
   }
 }
 
 .timestamp {
-  font-size: small;
-  color: gray;
+  font-size: $font-size;
+  color: $grey-color;
   align-content: center;
-  font-family: 'Poppins', sans-serif
+  font-family: $timestamp-font-family;
 }
 
 #chat-window {
@@ -122,28 +198,29 @@ export default {
 .user {
   text-align: right;
   color: #fff;
-  background-color: #414141;
+  background-color: $dark-color;
   margin-left: 100px;
-  border-radius: 5px;
-  border-bottom-right-radius: 0%;
-  padding: 0.5rem;
-  font-family: 'Roboto Mono', monospace;
-  font-size: small;
+  border-radius: $border-radius;
+  border-bottom-right-radius: 0;
+  padding: $padding;
+  font-family: $font-family;
+  font-size: $font-size;
 }
 
 .bot {
   text-align: left;
   color: rgb(0, 0, 0);
-  background-color: #ececec;
+  background-color: $light-color;
   margin-right: 100px;
-  border-radius: 5px;
-  padding: 0.5rem;
-  font-family: 'Roboto Mono', monospace;
-  border-bottom-left-radius: 0%;
+  border-radius: $border-radius;
   border: solid;
-  border-color: #7e7e7e;
+  border-color: $grey-color;
   border-width: 1px;
-  font-size: small;
+  border-bottom-left-radius: 0;
+  padding: $padding;
+  font-family: $font-family;
+  font-size: $font-size;
+
 }
 
 #new-message {
@@ -156,70 +233,61 @@ export default {
 }
 
 textarea {
-  font-family: 'Roboto Mono', monospace;
+  font-family: $font-family;
   color: rgb(255, 255, 255);
-  border-color: #000000;
+  border-color: $black-color;
   border-right: none;
   border-width: 2px;
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
+  border-top-left-radius: $button-border-radius;
+  border-bottom-left-radius: $button-border-radius;
   outline: none;
   resize: none;
   overflow-y: auto;
-  padding: 0.5rem;
+  padding: $padding;
   background-color: #000000aa;
   box-shadow: rgba(113, 113, 113, 0.16) 0px 1px 4px;
-  font-size: small;
+  font-size: $font-size;
 }
 
 .div-button {
   display: flex;
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
-  
+  border-top-right-radius: $button-border-radius;
+  border-bottom-right-radius: $button-border-radius;
 }
 
 .button {
   border: none;
   outline: none;
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-top-right-radius: $button-border-radius;
+  border-bottom-right-radius: $button-border-radius;
   background-color: #000000aa;
   border: solid;
-  border-color: #000000;
+  border-color: $black-color;
   border-left: none;
   border-width: 2px;
-}
 
-.button:hover {
-  cursor: pointer;
-  opacity: 0.7;
-  transition: 0.4s;
+  &:hover {
+    cursor: pointer;
+    opacity: 0.7;
+    transition: 0.4s;
+  }
 }
 
 .mode-button {
+  font-family: $timestamp-font-family;
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  top: 20px;
+  left: 20px;
   padding: 10px 20px;
-  background-color: #7e7e7e;
+  background-color: $grey-color;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: $border-radius;
   cursor: pointer;
   transition: 0.4s;
-}
 
-.mode-button:hover {
-  opacity: 0.7;
+  &:hover {
+    opacity: 0.7;
+  }
 }
-/* font-family: 'Poppins', sans-serif;
-font-family: 'Roboto Mono', monospace;
-font-family: 'Space Mono', monospace;
- */
-
-/* .dark-mode {
-  background-color: #333;
-  color: #fff;
-} */
 </style>
