@@ -3,7 +3,9 @@
     <div id="chat-window" :class="{ 'dark-mode-window': darkMode }">
       <div v-for="(message, index) in messages" :key="index">
         <div class="message-box">
-          <div class="align-items-center"><div class="timestamp">{{ message.timestamp }}</div></div>
+          <div class="align-items-center">
+            <div class="timestamp">{{ message.timestamp }}</div>
+          </div>
           <p class="message" :class="[message.source, { 'dark-mode-message': darkMode }]">
             {{ message.text }}
           </p>
@@ -16,8 +18,8 @@
         :class="{ 'dark-mode': darkMode }"></textarea>
       <div class="div-button">
         <button @click="sendMessage" class="button">
-          <svg v-if="!isLoading" class="button-svg" :class="{ 'dark-mode-svg': darkMode }" width="30" height="30" viewBox="0 0 40 40" fill="none"
-            xmlns="http://www.w3.org/2000/svg">
+          <svg v-if="!isLoading" class="button-svg" :class="{ 'dark-mode-svg': darkMode }" width="30" height="30"
+            viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="20" cy="20" r="20" fill="none" />
             <path
               d="M18.5 31C18.5 31.8284 19.1716 32.5 20 32.5C20.8284 32.5 21.5 31.8284 21.5 31H18.5ZM21.0607 7.93934C20.4749 7.35355 19.5251 7.35355 18.9393 7.93934L9.3934 17.4853C8.80761 18.0711 8.80761 19.0208 9.3934 19.6066C9.97918 20.1924 10.9289 20.1924 11.5147 19.6066L20 11.1213L28.4853 19.6066C29.0711 20.1924 30.0208 20.1924 30.6066 19.6066C31.1924 19.0208 31.1924 18.0711 30.6066 17.4853L21.0607 7.93934ZM21.5 31L21.5 9H18.5L18.5 31H21.5Z"
@@ -64,11 +66,6 @@ export default {
       this.newMessage = '';
       this.isLoading = false;
 
-      // Scroll to the bottom
-      this.$nextTick(() => {
-        const chatWindow = document.getElementById('chat-window');
-        chatWindow.scrollTop = chatWindow.scrollHeight;
-      });
     },
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
@@ -84,7 +81,6 @@ export default {
 
 
 <style lang="scss" scoped>
-
 $dark-color: #414141;
 $light-color: #ececec;
 $black-color: #000000;
@@ -96,7 +92,8 @@ $button-border-radius: 8px;
 $padding: 0.5rem;
 $font-size: small;
 
-html, body {
+html,
+body {
   transition: background-color .5s;
 }
 
@@ -125,7 +122,7 @@ body.dark-mode {
 .dark-mode-chat-window {
   background-color: $light-color;
   color: $dark-color;
-  transition: background-color 0.5s ease, color 0.5s ease;  
+  transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 .dark-mode .spinner {
@@ -154,7 +151,7 @@ body.dark-mode {
 }
 
 .dark-mode-svg {
-  fill: $dark-color;
+  fill: black;
   transition: fill 0.5s ease;
 }
 
@@ -196,10 +193,6 @@ body.dark-mode {
   color: $dark-color;
 }
 
-.dark-mode-svg {
-  fill: $dark-color;
-}
-
 $dark-color: #414141;
 $light-color: #ececec;
 $black-color: #000000;
@@ -227,7 +220,7 @@ $font-size: small;
 }
 
 .spinner {
-  border: 2px solid #f3f3f3;
+  border: 2px solid #7b7b7b;
   border-radius: 100%;
   border-top: 2px solid $black-color;
   width: 20px;

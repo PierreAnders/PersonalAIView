@@ -1,28 +1,23 @@
 <template>
   <div class="container">
+    <BackgroundAnimation />
     <ChatWindow />
   </div>
 </template>
 
 <script>
 import ChatWindow from './components/ChatWindow.vue';
+import BackgroundAnimation from './components/BackgroundAnimation.vue';
 
 export default {
   components: {
-    ChatWindow
+    ChatWindow,
+    BackgroundAnimation
   },
 }
 </script>
 
 <style>
-/* .container {
-  position: absolute; 
-  top: 0; 
-  left: 0; 
-  right: 0; 
-  bottom: 0; 
-  background-color: white;
-} */
 body.dark-mode {
   margin: 0;
   padding: 0;
@@ -33,7 +28,6 @@ body.dark-mode {
 html.dark-mode {
   background-color: #414141;
   color: #ececec;
-  transition: background-color 0.5s ease, color 0.5s ease;
+  /* transition: background-color 0.5s ease, color 0.5s ease; */
 }
-
 </style>
