@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'dark-mode': darkMode }">
-    <div id="chat-window">
+    <div id="chat-window" :class="{ 'dark-mode-window': darkMode }">
       <div v-for="(message, index) in messages" :key="index">
         <div class="message-box">
           <div class="align-items-center"><div class="timestamp">{{ message.timestamp }}</div></div>
@@ -63,18 +63,25 @@ export default {
       this.messages.push({ source: 'bot', text: response.data.answer, timestamp: timestamp });
       this.newMessage = '';
       this.isLoading = false;
+
+      // Scroll to the bottom
+      this.$nextTick(() => {
+        const chatWindow = document.getElementById('chat-window');
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      });
     },
     toggleDarkMode() {
-    this.darkMode = !this.darkMode;
-    if (this.darkMode) {
-      document.documentElement.classList.add('dark-mode');
-    } else {
-      document.documentElement.classList.remove('dark-mode');
+      this.darkMode = !this.darkMode;
+      if (this.darkMode) {
+        document.documentElement.classList.add('dark-mode');
+      } else {
+        document.documentElement.classList.remove('dark-mode');
+      }
     }
-  }
   }
 }
 </script>
+
 
 <style lang="scss" scoped>
 
@@ -100,6 +107,62 @@ body.dark-mode {
 .dark-mode {
   background-color: $dark-color;
   color: $light-color;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.dark-mode-message.user {
+  background-color: $light-color;
+  color: $dark-color;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.dark-mode-message.bot {
+  background-color: $dark-color;
+  color: $light-color;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.dark-mode-chat-window {
+  background-color: $light-color;
+  color: $dark-color;
+  transition: background-color 0.5s ease, color 0.5s ease;  
+}
+
+.dark-mode .spinner {
+  border-top: 2px solid $light-color;
+  transition: border-top 0.5s ease;
+}
+
+.dark-mode #new-message textarea {
+  background-color: #ecececaa;
+  color: $dark-color;
+  border-color: $light-color;
+  transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+}
+
+.dark-mode .button {
+  background-color: #ecececaa;
+  border-color: $light-color;
+  color: $dark-color;
+  transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
+}
+
+.dark-mode .mode-button {
+  background-color: $light-color;
+  color: $dark-color;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.dark-mode-svg {
+  fill: $dark-color;
+  transition: fill 0.5s ease;
+}
+
+.dark-mode #new-message textarea {
+  background-color: #ecececaa;
+  color: $dark-color;
+  border-color: $light-color;
+  transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
 }
 
 .dark-mode-message.user {
@@ -278,7 +341,7 @@ textarea {
   position: fixed;
   top: 20px;
   left: 20px;
-  padding: 10px 20px;
+  padding: 6px 10px;
   background-color: $grey-color;
   color: white;
   border: none;

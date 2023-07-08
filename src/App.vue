@@ -23,14 +23,17 @@ export default {
   bottom: 0; 
   background-color: white;
 } */
-body {
+body.dark-mode {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  transition: background-color 0.5s ease, color 0.5s ease;
 }
+
 html.dark-mode {
   background-color: #414141;
   color: #ececec;
+  transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 </style>
