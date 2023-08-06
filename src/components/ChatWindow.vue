@@ -6,8 +6,11 @@
           <div class="align-items-center">
             <div class="timestamp">{{ message.timestamp }}</div>
           </div>
-          <p class="message" :class="[message.source, { 'dark-mode-message': darkMode }]">
+          <!-- <p class="message" :class="[message.source, { 'dark-mode-message': darkMode }]">
             {{ message.text }}
+          </p> -->
+          <p class="message" :class="[message.source, { 'dark-mode-message': darkMode }]"
+            v-html="detectCodeBlocks(message.text)">
           </p>
         </div>
       </div>
@@ -50,6 +53,11 @@ export default {
     }
   },
   methods: {
+    detectCodeBlocks(text) {
+      // Regex pattern to find code blocks within ``` symbols
+      const regex = /```([^`]+)```/g;
+      return text.replace(regex, '<pre class="code-block">$1</pre>');
+    },
     async sendMessage() {
       this.isLoading = true;
 
@@ -57,7 +65,7 @@ export default {
 
       this.messages.push({ source: 'user', text: this.newMessage, timestamp: timestamp });
 
-      const response = await axios.post('http://localhost:5000/chat', {
+      const response = await axios.post('http://localhost:5000/AIchatGeneric', {
         session_id: this.session_id,
         query: this.newMessage
       });
@@ -81,6 +89,16 @@ export default {
 
 
 <style lang="scss" scoped>
+
+.code-block {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  padding: 10px;
+  border-radius: 5px;
+  font-family: 'Roboto Mono', monospace;
+  white-space: pre-wrap;
+}
+
 $dark-color: #414141;
 $light-color: #ececec;
 $black-color: #000000;
@@ -227,12 +245,12 @@ $font-size: small;
   height: 20px;
   animation: spin 0.7s linear infinite;
   margin-right: 4px;
-
+  
   @keyframes spin {
     0% {
       transform: rotate(0deg);
     }
-
+    
     100% {
       transform: rotate(360deg);
     }
@@ -276,7 +294,7 @@ $font-size: small;
   padding: $padding;
   font-family: $font-family;
   font-size: $font-size;
-
+  
 }
 
 #new-message {
@@ -321,7 +339,7 @@ textarea {
   border-color: $black-color;
   border-left: none;
   border-width: 2px;
-
+  
   &:hover {
     cursor: pointer;
     opacity: 0.7;
@@ -341,7 +359,7 @@ textarea {
   border-radius: $border-radius;
   cursor: pointer;
   transition: 0.4s;
-
+  
   &:hover {
     opacity: 0.7;
   }
