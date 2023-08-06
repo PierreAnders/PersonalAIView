@@ -10,7 +10,7 @@
             {{ message.text }}
           </p> -->
           <p class="message" :class="[message.source, { 'dark-mode-message': darkMode }]"
-            v-html="detectCodeBlocks(message.text)">
+            v-html="highlightCodeBlocks(message.text)">
           </p>
         </div>
       </div>
@@ -41,6 +41,9 @@
 <script>
 import axios from 'axios';
 import moment from 'moment';
+import hljs from 'highlight.js';
+import 'highlight.js/lib/languages/javascript';
+import 'highlight.js/lib/languages/python';
 
 export default {
   data() {
@@ -53,10 +56,12 @@ export default {
     }
   },
   methods: {
-    detectCodeBlocks(text) {
-      // Regex pattern to find code blocks within ``` symbols
+    highlightCodeBlocks(text) {
       const regex = /```([^`]+)```/g;
-      return text.replace(regex, '<pre class="code-block">$1</pre>');
+      return text.replace(regex, (match, code) => {
+        const highlightedCode = hljs.highlightAuto(code).value;
+        return `<pre><code>${highlightedCode}</code></pre>`;
+      });
     },
     async sendMessage() {
       this.isLoading = true;
@@ -89,15 +94,8 @@ export default {
 
 
 <style lang="scss" scoped>
-
-.code-block {
-  background-color: #1e1e1e;
-  color: #ffffff;
-  padding: 10px;
-  border-radius: 5px;
-  font-family: 'Roboto Mono', monospace;
-  white-space: pre-wrap;
-}
+@import "~highlight.js/styles/default.css";
+@import "~highlight.js/styles/atom-one-dark.css";
 
 $dark-color: #414141;
 $light-color: #ececec;
@@ -245,12 +243,12 @@ $font-size: small;
   height: 20px;
   animation: spin 0.7s linear infinite;
   margin-right: 4px;
-  
+
   @keyframes spin {
     0% {
       transform: rotate(0deg);
     }
-    
+
     100% {
       transform: rotate(360deg);
     }
@@ -270,7 +268,7 @@ $font-size: small;
 }
 
 .user {
-  text-align: right;
+  text-align: left;
   color: #fff;
   background-color: $dark-color;
   margin-left: 100px;
@@ -294,7 +292,7 @@ $font-size: small;
   padding: $padding;
   font-family: $font-family;
   font-size: $font-size;
-  
+
 }
 
 #new-message {
@@ -339,7 +337,7 @@ textarea {
   border-color: $black-color;
   border-left: none;
   border-width: 2px;
-  
+
   &:hover {
     cursor: pointer;
     opacity: 0.7;
@@ -359,7 +357,7 @@ textarea {
   border-radius: $border-radius;
   cursor: pointer;
   transition: 0.4s;
-  
+
   &:hover {
     opacity: 0.7;
   }
