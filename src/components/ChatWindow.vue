@@ -39,8 +39,6 @@
 import axios from 'axios';
 import moment from 'moment';
 import hljs from 'highlight.js';
-import 'highlight.js/lib/languages/javascript';
-import 'highlight.js/lib/languages/python';
 
 export default {
   data() {
@@ -91,7 +89,6 @@ export default {
 
 
 <style lang="scss" scoped>
-@import "~highlight.js/styles/default.css";
 @import "~highlight.js/styles/atom-one-dark.css";
 
 $dark-color: #414141;
