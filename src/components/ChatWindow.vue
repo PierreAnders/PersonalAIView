@@ -6,9 +6,6 @@
           <div class="align-items-center">
             <div class="timestamp">{{ message.timestamp }}</div>
           </div>
-          <!-- <p class="message" :class="[message.source, { 'dark-mode-message': darkMode }]">
-            {{ message.text }}
-          </p> -->
           <p class="message" :class="[message.source, { 'dark-mode-message': darkMode }]"
             v-html="highlightCodeBlocks(message.text)">
           </p>
@@ -263,12 +260,14 @@ $font-size: small;
 }
 
 #chat-window {
-  overflow-y: auto;
   padding: 20px;
 }
 
 .user {
+  z-index: 0;
   text-align: left;
+  overflow-y: auto;
+  overflow-x: auto;
   color: #fff;
   background-color: $dark-color;
   margin-left: 100px;
@@ -280,6 +279,9 @@ $font-size: small;
 }
 
 .bot {
+  z-index: 0;
+  overflow-y: auto;
+  overflow-x: auto;
   text-align: left;
   color: rgb(0, 0, 0);
   background-color: $light-color;
@@ -292,7 +294,6 @@ $font-size: small;
   padding: $padding;
   font-family: $font-family;
   font-size: $font-size;
-
 }
 
 #new-message {
